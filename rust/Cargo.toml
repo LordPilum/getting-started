@@ -1,0 +1,20 @@
+[package]
+name = "gettingstarted"
+version = "0.1.0"
+authors = ["Jan Kjetil Myklebust"]
+edition = "2018"
+
+[lib]
+name = "apiclient"
+path = "src/apiclient.rs"
+
+[dependencies]
+chrono = "*"
+config = "0.10"
+reqwest = { version = "0.10", features = ["json"] }
+tokio = { version = "0.2", features = ["full"] }
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+
+[dev-dependencies]
+tokio-test = "*"
