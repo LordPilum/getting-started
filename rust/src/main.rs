@@ -1,12 +1,32 @@
+extern crate envfile;
 mod apiclient;
 use reqwest;
 use std::env;
+use envfile::EnvFile;
+use std::path::Path;
+
+fn load_key() -> String
+{
+	// Read the API key from the environment variable, if set.
+	let api_key = match env::var("API_KEY")
+	{
+		Ok(key) => key,
+		Err(_) =>
+		{
+			// Read the API key from the .env file.
+			let envfile = EnvFile::new(&Path::new(".env")).unwrap();
+			let key = envfile.get("API_KEY").unwrap();
+			key.to_string()
+		}
+	};
+
+	return api_key;
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>>
 {
-	// Read the API key from the environment variable.
-	let api_key = env::var("API_KEY").expect("API Key must be set");
+	let api_key = load_key();
 
 	// Create a new HTTP client.
 	// Reqwest keeps an internal connection pool, so a client should only be created once and re-used.

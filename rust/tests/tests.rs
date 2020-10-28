@@ -1,14 +1,36 @@
 #[cfg(test)]
 mod test {
+	extern crate envfile;
 	extern crate apiclient;
 	use reqwest;
 	use std::env;
+	use envfile::EnvFile;
+	use std::path::Path;
+
+	// Load API key.
+	fn load_key() -> String
+	{
+		// Read the API key from the environment variable, if set.
+		let api_key = match env::var("API_KEY")
+		{
+			Ok(key) => key,
+			Err(_) =>
+			{
+				// Read the API key from the .env file.
+				let envfile = EnvFile::new(&Path::new(".env")).unwrap();
+				let key = envfile.get("API_KEY").unwrap();
+				key.to_string()
+			}
+		};
+	
+		return api_key;
+	}
 
 	// Test the get test customers call.
 	#[tokio::test]
 	async fn test_get_customers()
 	{
-		let api_key = env::var("API_KEY").unwrap();
+		let api_key = load_key();
 		let http_client = reqwest::Client::new();
 
 		let test_customers = apiclient::get_test_customers(&http_client, &api_key).await.unwrap();
@@ -21,7 +43,7 @@ mod test {
 	#[tokio::test]
 	async fn test_get_currency_conversions()
 	{
-		let api_key = env::var("API_KEY").unwrap();
+		let api_key = load_key();
 		let http_client = reqwest::Client::new();
 
 		let currency_conversions = apiclient::get_currency_conversions(&http_client, &api_key, "EUR").await.unwrap();
@@ -49,7 +71,7 @@ mod test {
 	#[tokio::test]
 	async fn test_get_currency_conversion()
 	{
-		let api_key = env::var("API_KEY").unwrap();
+		let api_key = load_key();
 		let http_client = reqwest::Client::new();
 
 		let currency_conversion = apiclient::get_currency_conversion(&http_client, &api_key, "NOK", "EUR").await.unwrap();

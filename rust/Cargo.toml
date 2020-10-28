@@ -9,8 +9,8 @@ name = "apiclient"
 path = "src/apiclient.rs"
 
 [dependencies]
-chrono = "*"
-config = "0.10"
+chrono = "0.4"
+envfile = "0.2"
 reqwest = { version = "0.10", features = ["json"] }
 tokio = { version = "0.2", features = ["full"] }
 serde_json = "1.0"
