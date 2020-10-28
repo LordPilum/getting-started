@@ -1,10 +1,8 @@
 .idea/
 .env
-.idea
-*.iml
-/.env
  
 # Artifacts generate by Cargo (rust)
+*.iml
 /rust/target/
 Cargo.lock
 /rust/**/*.rs.bk
